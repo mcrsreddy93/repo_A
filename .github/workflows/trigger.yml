@@ -1,0 +1,19 @@
+name: Trigger Repo-B Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send repository_dispatch to Repo-B
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+            https://api.github.com/repos/ORG-B/REPO-B/dispatches \
+            -d '{"event_type": "run-tests", "client_payload": {"environment": "qa", "tag": "smoke"}}'
